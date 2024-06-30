@@ -4,6 +4,7 @@
  */
 package model;
 
+import DAO.ProjectStatusDAO;
 import java.util.Date;
 
 /**
@@ -17,6 +18,30 @@ public class ProjectPhase {
     private Date startDate;
     private Date endDate;
     private int statusID;
+    
+    private ProjectStatus projectPhraseStatus;
+
+    public ProjectPhase() {
+    }
+
+    public ProjectPhase(int phaseID, int projectID, String phaseTitle, Date startDate, Date endDate, int statusID) {
+        this.phaseID = phaseID;
+        this.projectID = projectID;
+        this.phaseTitle = phaseTitle;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.statusID = statusID;
+    }
+    
+    
+    public ProjectStatus getProjectPhraseStatus() {
+        return new ProjectStatusDAO().getProjectStatusById(statusID);
+    }
+
+    public void setProjectStatus(ProjectStatus projectStatus) {
+        this.projectPhraseStatus = projectStatus;
+    }
+    
 
     // Getters and Setters
     public int getPhaseID() {

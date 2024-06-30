@@ -12,6 +12,15 @@ public class ProjectStatus {
     private int statusID;
     private String statusName;
 
+    public ProjectStatus() {
+    }
+
+    public ProjectStatus(int statusID, String statusName) {
+        this.statusID = statusID;
+        this.statusName = statusName;
+    }
+    
+
     // Getters and Setters
     public int getStatusID() {
         return statusID;

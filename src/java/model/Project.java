@@ -4,6 +4,8 @@
  */
 package model;
 
+import DAO.AdvisorDAO;
+import DAO.ProjectStatusDAO;
 import java.util.Date;
 
 /**
@@ -19,6 +21,9 @@ public class Project {
     private int advisorID;
     private int statusID;
     private int groupID;
+    
+    private ProjectStatus projectStatus;
+    private Advisor advisor;
 
     public Project() {
     }
@@ -33,8 +38,25 @@ public class Project {
         this.statusID = statusID;
         this.groupID = groupID;
     }
+
+    public Advisor getAdvisor() {
+        return new AdvisorDAO().getAdvisorById(advisorID);
+    }
+
+    public void setAdvisor(Advisor advisor) {
+        this.advisor = advisor;
+    }
+    
     
 
+    public ProjectStatus getProjectStatus() {
+        return new ProjectStatusDAO().getProjectStatusById(statusID);
+    }
+
+    public void setProjectStatus(ProjectStatus projectStatus) {
+        this.projectStatus = projectStatus;
+    }
+    
     // Getters and Setters
     public int getProjectID() {
         return projectID;

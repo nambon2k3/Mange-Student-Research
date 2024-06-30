@@ -7,6 +7,7 @@ package controller;
 import DAO.AccountDAO;
 import DAO.AdvisorDAO;
 import DAO.StudentDAO;
+import DAO.TaskDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -87,7 +88,7 @@ public class LoginController extends HttpServlet {
             if(account.getUserType().equalsIgnoreCase("student")) {
                 Student student = new StudentDAO().getStudentByStudentID(account.getStudentID());
                 session.setAttribute("student", student);
-                response.getWriter().print("Student");
+                response.sendRedirect("student-dashboard");
             } else {
                 Advisor advisor = new AdvisorDAO().getAdvisorById(account.getAdvisorID());
                 session.setAttribute("advisor", advisor);
@@ -98,6 +99,7 @@ public class LoginController extends HttpServlet {
             request.setAttribute("errorMessage", "Invalid username or password");
             request.getRequestDispatcher("login.jsp").forward(request, response);
         }
+        
     }
 
     /**

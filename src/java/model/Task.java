@@ -4,7 +4,9 @@
  */
 package model;
 
-import java.util.Date;
+import DAO.ProjectStatusDAO;
+import DAO.StudentDAO;
+import java.sql.Date;
 
 /**
  *
@@ -18,7 +20,67 @@ public class Task {
     private Date startDate;
     private Date endDate;
     private int statusID;
-    private Integer assignedTo;
+    private int assignedTo;
+    private String filePath;
+    
+    private ProjectStatus taskStatus;
+    private Student student;
+
+    public Task() {
+    }
+
+    public Task(int taskID, int phaseID, String taskTitle, String description, Date startDate, Date endDate, int statusID, int assignedTo) {
+        this.taskID = taskID;
+        this.phaseID = phaseID;
+        this.taskTitle = taskTitle;
+        this.description = description;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.statusID = statusID;
+        this.assignedTo = assignedTo;
+    }
+
+    public Task(int taskID, int phaseID, String taskTitle, String description, Date startDate, Date endDate, int statusID, int assignedTo, String filePath) {
+        this.taskID = taskID;
+        this.phaseID = phaseID;
+        this.taskTitle = taskTitle;
+        this.description = description;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.statusID = statusID;
+        this.assignedTo = assignedTo;
+        this.filePath = filePath;
+        this.taskStatus = taskStatus;
+        this.student = student;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+    
+    
+
+    public Student getStudent() {
+        return new StudentDAO().getStudentByStudentID(assignedTo);
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
+    }
+    
+    
+    
+    public ProjectStatus getTaskStatus() {
+        return new ProjectStatusDAO().getProjectStatusById(statusID);
+    }
+
+    public void setTaskStatus(ProjectStatus projectStatus) {
+        this.taskStatus = projectStatus;
+    }
 
     // Getters and Setters
     public int getTaskID() {
@@ -77,11 +139,11 @@ public class Task {
         this.statusID = statusID;
     }
 
-    public Integer getAssignedTo() {
+    public int getAssignedTo() {
         return assignedTo;
     }
 
-    public void setAssignedTo(Integer assignedTo) {
+    public void setAssignedTo(int assignedTo) {
         this.assignedTo = assignedTo;
     }
 }

@@ -11,8 +11,30 @@ package model;
 public class Group {
     private int groupID;
     private String groupName;
+    private int createdBy;
+
+    public Group() {
+    }
+
+    public Group(int groupID, String groupName, int createdBy) {
+        this.groupID = groupID;
+        this.groupName = groupName;
+        this.createdBy = createdBy;
+    }
+    
+    
 
     // Getters and Setters
+    
+    
+    public void setCreatedBy(int createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public int getCreatedBy() {
+        return createdBy;
+    }
+
     public int getGroupID() {
         return groupID;
     }

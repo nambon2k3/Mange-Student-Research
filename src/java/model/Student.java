@@ -4,6 +4,7 @@
  */
 package model;
 
+import DAO.DepartmentDAO;
 import java.util.Date;
 
 /**
@@ -18,6 +19,8 @@ public class Student {
     private String email;
     private Date enrollmentDate;
     private int departmentID;
+    private Department department;
+    
 
     public Student() {
     }
@@ -30,9 +33,15 @@ public class Student {
         this.enrollmentDate = enrollmentDate;
         this.departmentID = departmentID;
     }
-    
-    
 
+    public void setDepartment(Department department) {
+        this.department = department;
+    }
+
+    public Department getDepartment() {
+        return new DepartmentDAO().getDepartmentById(departmentID);
+    }
+    
     // Getters and Setters
     public int getStudentID() {
         return studentID;
@@ -81,4 +90,11 @@ public class Student {
     public void setDepartmentID(int departmentID) {
         this.departmentID = departmentID;
     }
+
+    @Override
+    public String toString() {
+        return "Student{" + "studentID=" + studentID + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + ", enrollmentDate=" + enrollmentDate + ", departmentID=" + departmentID + ", department=" + department + '}';
+    }
+    
+    
 }

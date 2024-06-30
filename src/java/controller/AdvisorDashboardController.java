@@ -5,6 +5,7 @@
 
 package controller;
 
+import DAO.GroupDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -15,6 +16,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import model.Project;
 import DAO.ProjectDAO;
+import DAO.ProjectStatusDAO;
+import java.time.LocalDate;
+import model.Advisor;
+import model.Group;
+import model.ProjectStatus;
 
 /**
  *
@@ -47,30 +53,46 @@ public class AdvisorDashboardController extends HttpServlet {
         }
     } 
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** 
-     * Handles the HTTP <code>GET</code> method.
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        int advisorID = Integer.parseInt(request.getParameter("advisorID"));
-        int page = Integer.parseInt(request.getParameter("page"));
-        int recordsPerPage = 10;
+        int advisorID = ((Advisor) request.getSession().getAttribute("advisor")).getAdvisorID();
+        int page = 1;
+        if(request.getParameter("page") != null && !request.getParameter("page").isEmpty()) {
+            page = Integer.parseInt(request.getParameter("page"));
+        }
         
-        ProjectDAO projectDAO =  new ProjectDAO(); // Initialize your DAO implementation
+        ProjectDAO projectDAO = new ProjectDAO();
+        GroupDAO groupDAO = new GroupDAO();
+        
+        String projectTitle = request.getParameter("projectTitle");
+        String statusIDStr = request.getParameter("statusID");
+        String startDateStr = request.getParameter("startDate");
+        String endDateStr = request.getParameter("endDate");
+        int recordsPerPage = 10;
 
-        List<Project> projects = projectDAO.getProjectsByAdvisorId(advisorID, (page - 1) * recordsPerPage, recordsPerPage);
-        int noOfRecords = projectDAO.getNoOfRecords(advisorID);
+        Integer statusID = statusIDStr != null && !statusIDStr.isEmpty() ? Integer.parseInt(statusIDStr) : null;
+        LocalDate startDate = startDateStr != null && !startDateStr.isEmpty() ? LocalDate.parse(startDateStr) : null;
+        LocalDate endDate = endDateStr != null && !endDateStr.isEmpty() ? LocalDate.parse(endDateStr) : null;
+
+        int noOfRecords = projectDAO.countProjectsByFilters(advisorID, projectTitle, statusID, startDate, endDate);
         int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
 
+        List<Project> projects = projectDAO.getProjectsByFilters(advisorID, projectTitle, statusID, startDate, endDate, (page - 1) * recordsPerPage, recordsPerPage);
+        List<ProjectStatus> statuses = new ProjectStatusDAO().getAllProjectStatuses();
+        
+        
+        List<Group> groups = groupDAO.getGroupsCreatedByAdvisor(advisorID);
+        
         request.setAttribute("projects", projects);
+        request.setAttribute("groups", groups);
+        request.setAttribute("statuses", statuses);
         request.setAttribute("noOfPages", noOfPages);
         request.setAttribute("currentPage", page);
+        request.setAttribute("projectTitle", projectTitle);
+        request.setAttribute("statusID", statusID);
+        request.setAttribute("startDate", startDate);
+        request.setAttribute("endDate", endDate);
 
         request.getRequestDispatcher("advisor-dashboard.jsp").forward(request, response);
     } 
